@@ -15,6 +15,6 @@ class PublicController extends Controller
      public function show($id)
     {
         $book = Book::findOrFail($id);
-        return view('public.book.show', compact('book'));
+        return view('public.show', compact('book'));
     }
 }

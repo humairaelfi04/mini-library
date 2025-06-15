@@ -22,7 +22,7 @@
             <label for="year" class="form-label">Tahun</label>
             <input type="text" name="year" class="form-control" value="{{ $book->year }}">
         </div>
-        
+
         <div class="mb-3">
             <label for="category_id" class="form-label">Kategori</label>
             <select name="category_id" class="form-control">
@@ -36,8 +36,8 @@
             <textarea name="description" class="form-control">{{ $book->description }}</textarea>
         </div>
         <div class="mb-3">
-            <label for="cover_image" class="form-label">Cover (biarkan kosong jika tidak diubah)</label>
-            <input type="file" name="cover_image" class="form-control">
+            <label for="cover" class="form-label">Cover (biarkan kosong jika tidak diubah)</label>
+            <input type="file" name="cover" class="form-control">
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>

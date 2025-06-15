@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Daftar Kategori</h1>
-    <a href="{{ route('categories.create') }}" class="btn btn-primary mb-3">Tambah Kategori</a>
+    <a href="{{ route('categories.create') }}" class="btn btn-custom mb-3">Tambah Kategori</a>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

@@ -32,7 +32,7 @@
             <input type="password" name="password" class="form-control" required>
         </div>
 
-        <button class="btn btn-primary w-100" type="submit">Login</button>
+        <button class="btn btn-custom w-100" type="submit">Login</button>
     </form>
 </div>
 @endsection

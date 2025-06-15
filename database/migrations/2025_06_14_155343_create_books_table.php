@@ -9,14 +9,13 @@ return new class extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('author');
-            $table->string('publisher')->nullable();
-            $table->string('year');
-
             $table->text('description')->nullable();
-            $table->string('cover_image')->nullable();
+            $table->string('publisher')->nullable();
+            $table->string('author')->nullable();
+            $table->string('year')->nullable();
+            $table->string('cover')->nullable(); // ✅ baris ini penting
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

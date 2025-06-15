@@ -22,36 +22,26 @@ class BookController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'author' => 'required',
-            'publisher' => 'nullable',
-            'year' => 'required|digits:4',
-            'isbn' => 'nullable',
-            'description' => 'nullable',
-            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
         $coverName = null;
-        if ($request->hasFile('cover_image')) {
-            $coverName = time() . '.' . $request->cover_image->extension();
-            $request->cover_image->move(public_path('covers'), $coverName);
+
+        if ($request->hasFile('cover')) {
+            $coverName = time() . '.' . $request->cover->extension();
+            $request->cover->move(public_path('covers'), $coverName);
         }
 
         Book::create([
             'title' => $request->title,
-            'category_id' => $request->category_id,
             'author' => $request->author,
             'publisher' => $request->publisher,
             'year' => $request->year,
-            'isbn' => $request->isbn,
+            'category_id' => $request->category_id,
             'description' => $request->description,
-            'cover_image' => $coverName
+            'cover' => $coverName,
         ]);
 
         return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan!');
     }
+
 
     public function edit(Book $book)
     {
@@ -59,50 +49,50 @@ class BookController extends Controller
         return view('books.edit', compact('book', 'categories'));
     }
 
-    public function update(Request $request, Book $book)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'title' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'author' => 'required',
-            'publisher' => 'nullable',
-            'year' => 'required|digits:4',
-            'isbn' => 'nullable',
-            'description' => 'nullable',
-            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $book = Book::findOrFail($id);
 
-        $coverName = $book->cover_image;
-        if ($request->hasFile('cover_image')) {
-            if ($coverName && file_exists(public_path('covers/' . $coverName))) {
-                unlink(public_path('covers/' . $coverName));
+        $coverName = $book->cover;
+
+        if ($request->hasFile('cover')) {
+            // Hapus cover lama jika ada
+            if ($book->cover && file_exists(public_path('covers/' . $book->cover))) {
+                unlink(public_path('covers/' . $book->cover));
             }
-            $coverName = time() . '.' . $request->cover_image->extension();
-            $request->cover_image->move(public_path('covers'), $coverName);
+
+            $coverName = time() . '.' . $request->cover->extension();
+            $request->cover->move(public_path('covers'), $coverName);
         }
 
         $book->update([
             'title' => $request->title,
-            'category_id' => $request->category_id,
             'author' => $request->author,
             'publisher' => $request->publisher,
             'year' => $request->year,
-            'isbn' => $request->isbn,
+            'category_id' => $request->category_id,
             'description' => $request->description,
-            'cover_image' => $coverName
+            'cover' => $coverName,
         ]);
 
-        return redirect()->route('books.index')->with('success', 'Buku berhasil diupdate!');
+        return redirect()->route('books.index')->with('success', 'Buku berhasil diperbarui!');
     }
+
 
     public function destroy(Book $book)
     {
-        if ($book->cover_image && file_exists(public_path('covers/' . $book->cover_image))) {
-            unlink(public_path('covers/' . $book->cover_image));
+        if ($book->cover && file_exists(public_path('covers/' . $book->cover))) {
+            unlink(public_path('covers/' . $book->cover));
         }
 
         $book->delete();
 
         return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus!');
+    }
+
+    public function show($id)
+    {
+        $book = Book::findOrFail($id);
+        return view('books.show', compact('book'));
     }
 }
